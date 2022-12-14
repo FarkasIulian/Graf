@@ -19,7 +19,7 @@ void introducere_nod(int nr) {
 	nod++;
 }
 
-void introducere_arc(int x,int y) {
+void introducere_arc(int x,int y,int pondere) {
 	int i, j,val1,val2;
 	for (i = 0; i < nod; i++) {
 		if (noduri[i] == x)
@@ -27,8 +27,8 @@ void introducere_arc(int x,int y) {
 		if (noduri[i] == y)
 			val2 = i;
 	}
-	mat[val1][val2] = 1;
-	mat[val2][val1] = 1;
+	mat[val1][val2] = pondere;
+	mat[val2][val1] = pondere;
 }
 
 void afisare() {
@@ -101,7 +101,7 @@ void TraversareInAdancime() {
 	int i;
 	for (i = 0; i < nod; i++) {
 		culori[noduri[i]] = -1;
-		sp[noduri[i]] = -1;
+		sp[noduri[i]] = NULL;
 	}
 	timp = 0;
 	for (i = 0; i < nod; i++) {
@@ -110,8 +110,39 @@ void TraversareInAdancime() {
 	}
 }
 
+void prim(int start) {
+	int vizitat[N], i,j,suma=0,nr_vizitate=1,pos=-1,min=99999;
+	for (i = 0; i < nod; i++) {
+		vizitat[i] = -1;
+		if (noduri[i] == start)
+			pos = i;
+	}
+	if (pos == -1) {
+		printf("\nNu exista nodul specificat.");
+		return;
+	}
+	vizitat[pos] = 1;
+	printf("%d ", noduri[start]);
+	while (nr_vizitate < nod) {
+		min = 99999;
+		for (i = 0; i < nod; i++)
+			for (j = 0; j < nod; j++)
+				if (vizitat[i] == 1 && vizitat[j] == -1 && mat[i][j] < min && i != j && mat[i][j] != -1){
+					pos = j;
+					min = mat[i][j];
+				}
+	vizitat[pos] = 1;
+	nr_vizitate++;
+	if (min != 99999)
+		suma += min;
+	printf("%d ", noduri[pos]);
+	}
+	printf("\nSuma ponderiilor este: %d", suma);
+}
+
+
 int main() {
-	int opt,val,val1,val2,sters;
+	int opt,val,val1,val2,sters,pondere,start;
 	while (1) {
 		printf("MENIU: \n");
 		printf("1.Initializare.\n");
@@ -121,7 +152,8 @@ int main() {
 		printf("5.Stergere nod.\n");
 		printf("6.Stergere arc.\n");
 		printf("7.Parcurgere.\n");
-		printf("8.Exit.\n");
+		printf("8.Prim.\n");
+		printf("9.Exit.\n");
 		printf("Introduceti optiunea dorita: ");
 		scanf("%d", &opt);
 		switch (opt)
@@ -139,7 +171,9 @@ int main() {
 			scanf("%d", &val1);
 			printf("Introduceti a doua valoare: ");
 			scanf("%d", &val2);
-			introducere_arc(val1, val2);
+			printf("Introduceti ponderea arcului: ");
+			scanf("%d", &pondere);
+			introducere_arc(val1, val2,pondere);
 			break;
 		case 4:
 			afisare();
@@ -159,7 +193,11 @@ int main() {
 		case 7:
 			TraversareInAdancime();
 			break;
-		case 8:
+		case 8: 
+			printf("\nIntroduceti valoarea nodului de la care doriti sa incepeti: ");
+			scanf("%d", &start);
+			prim(start);
+		case 9:
 			exit(0);
 			break;
 		default:
