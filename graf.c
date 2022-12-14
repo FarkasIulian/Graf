@@ -49,20 +49,18 @@ void stergere(int valoare) {
 		if (noduri[i] == valoare) {
 			x = i;
 			for (j = i; j < nod - 1; j++) {
-				noduri[j] = noduri[j + 1];
+				noduri[j] = noduri[j + 1]; // mutam elementele din vector la stanga cu o pozitie
 			}
 		}
-	i = x;
-	j = x;
 	for (i = x; i < nod; i++) {
 		for (j = 0; j < nod; j++)
-			mat[i][j] = mat[i + 1][j];
+			mat[i][j] = mat[i + 1][j]; 
 	}
 	for (j = x; j < nod; j++) {
 		for (i = 0; i < nod; i++)
-			mat[i][j] = mat[i][j+1];
+			mat[i][j] = mat[i][j+1];  // mutam liniile si coloanele din matrice pentru a obtine matricea noua fara nodul sters
 	}
-	nod--;
+	nod--; // scadem numarul de noduri
 }
 
 void stergere_arc(int x,int y) {
@@ -76,7 +74,7 @@ void stergere_arc(int x,int y) {
 	mat[val1][val2] = -1;
 	mat[val2][val1] = -1;
 }
-
+// algoritm de parcurgere in adancime
 void CautareInAdancime(int x) {
 	int i=0, j, v;
 	culori[x] = 0;
